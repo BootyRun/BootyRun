@@ -1,0 +1,49 @@
+//////// rotate image ////////
+
+var smile = new Image();
+smile.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPAgMAAABGuH3ZAAAAAXNSR0IArs4c6QAAAAlQTFRFAAANAAAA/PxQjQj98QAAAAF0Uk5TAEDm2GYAAAABYktHRACIBR1IAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH2gwXFQ4DaigKYQAAADhJREFUCNdjYBANYGBgzFrKwMC2apUDg1TUtAkQImvVqiXoROaqlUsYpLKWAZVMjZoA0QHWCzIFAJGSGI4XxkZDAAAAAElFTkSuQmCC';
+var canvas = document.createElement('canvas');
+document.body.appendChild(canvas);
+var context = canvas.getContext('2d');
+context.fillStyle = 'silver';
+context.fillRect(0, 0, canvas.width, canvas.height);
+var theta = 0;
+drawStep = function() {
+  context.save();
+  context.translate(150, 75);
+  context.rotate(theta);
+  context.drawImage(smile, -8, -8);
+  context.restore();
+  theta += Math.PI / 180;
+  setTimeout(drawStep, 16);
+};
+setTimeout(drawStep, 16);
+
+//////////////////////////////
+
+function MyClass() { 
+} 
+
+MyClass.prototype.setTimer = function(msg) 
+{ 
+	var myClass = this; 
+
+	function timerRelay() 
+	{ 
+		myClass.handleTimer(msg); 
+	} 
+
+	alert("Starting timer"); 
+	setTimeout(timerRelay, 1000); 
+} 
+
+MyClass.prototype.handleTimer = function(msg) 
+{ 
+	alert(msg); 
+} 
+
+var c = new MyClass(); 
+c.setTimer("Hello");
+
+
+

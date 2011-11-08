@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Map</title>
+	<meta name="generator" content="TextMate http://macromates.com/">
+	<meta name="author" content="James Switzer">
+	<!-- Date: 2011-10-29 -->
+	<style type="text/css">
+	canvas {
+		display: block;
+		margin-left: auto;
+		margin-right: auto; 
+		border-style:solid;
+		border-width:2px;
+		}
+	</style>
+	<script type="text/javascript" src="imagePreloader.js"></script>
+	<script type="text/javascript" src="game.js"></script>
+	<script type="text/javascript">
+	// replace with ajax calls...
+	var initState = [
+		{
+			Name: 'Ship 1',
+			Type: 'Galleon',
+			X: 3,
+			Y: 3,
+			D: 'N'
+		},
+		{
+			Name: 'Ship 2',
+			Type: 'Schooner',
+			X: 6,
+			Y: 5,
+			D: 'NW'
+		},
+		{
+			Name: 'Ship 3',
+			Type: 'Frigate',
+			X: 6,
+			Y: 3,
+			D: 'S'
+		},
+		{
+			Name: 'Move Ship',
+			Type: 'Schooner',
+			X: 12,
+			Y: 8,
+			D: 'S',
+		}
+	];
+
+	var theMoves = [
+		{
+			Name: 'Ship 1',
+			Type: 'Galleon',
+			X: 3,
+			Y: 3,
+			D: 'N',
+			Moves: [{
+				Type: 'Turn',
+				D: 'NW'
+			}, {
+				Type: 'Move',
+				X: 2,
+				Y: 2
+			}]
+		},
+		{
+			Name: 'Ship 2',
+			Type: 'Frigate',
+			X: 6,
+			Y: 5,
+			D: 'NW',
+			Moves: [{
+				Type: 'Dig'
+			}, {
+				Type: 'Wait'
+			}]
+		},
+		{
+			Name: 'Ship 3',
+			Type: 'Schooner',
+			X: 6,
+			Y: 3,
+			D: 'S',
+			Moves: [{
+				Type: 'Move',
+				X: 6,
+				Y: 4
+			}, {
+				Type: 'Load'
+			}, {
+				Type: 'Fire',
+				X: 6,
+				Y: 5
+			}]
+		},
+		{
+			Name: 'Move Ship',
+			Type: 'Schooner',
+			X: 12,
+			Y: 8,
+			D: 'S',
+			Moves: [{
+				Type: 'Move',
+				X: 12,
+				Y: 10,
+			}]
+		}
+	];
+
+	var images = Array();
+	var game;
+	
+	var ip = new ImagePreloader(new Array("map.png", "ship1.png", "ship2.png", "ship3.png"), function(img, count){
+		images['Map'] = img[0];
+		images['Galleon'] = img[1];
+		images['Frigate'] = img[2];
+		images['Schooner'] = img[3];
+
+		var canvas = document.getElementById('main');
+		if(canvas.getContext){
+			var g = canvas.getContext('2d');
+			game = new Game(g, initState);
+			game.drawFrame();
+		}
+	});
+	
+	function doTheMoves()
+	{
+		game.ships = JSON.parse(JSON.stringify(theMoves)); // ugly hack around js' lack of clone
+		game.reset();
+		game.drawFrame();
+		return false;
+	}
+	
+	</script>
+	
+</head>
+<body>
+<input type="button" value="go" onclick="doTheMoves();">
+<canvas height="768" width="768" id="main">
+	Get a real browser. &#xCA0;_&#xCA0;
+</canvas>
+
+</body>
+</html>
