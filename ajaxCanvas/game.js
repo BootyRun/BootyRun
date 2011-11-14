@@ -2,6 +2,8 @@
 var gridSize = 24;
 var ticksPerMove = 24;
 var msPerTick = 42;
+var textColor = "rgb(200,200,200)";
+var textBackground = "rgb(0,0,0)";
 
 function Game(g, ships)
 {
@@ -65,7 +67,7 @@ Game.prototype.drawMap = function()
 {
 	this.g.drawImage(images['Map'],0,0);
 
-	this.g.fillStyle = "rgb(0,0,200)";
+	this.g.fillStyle = "rgb(200,200,200)";
 	for(var x = 0; x<32; x++)
 	{
 		for(var y = 0; y<32; y++)
@@ -96,6 +98,12 @@ Game.prototype.animateShip = function(ship)
 	} else {
 		this.g.translate((ship['X'] + 0.5) * gridSize, (ship['Y'] + 0.5) * gridSize);
 	}
+	
+	this.g.fillStyle = textBackground;
+	var info = this.g.measureText(ship['Name']);
+	this.g.fillRect(-12, -20, info.width+4, 12);
+	
+	this.g.fillStyle = textColor;
 	this.g.fillText(ship['Name'], -10, -10);
 	
 	if(ship['Moves'] && ship['Moves'][this.move] && ship['Moves'][this.move]['Type'] == 'Fire')
@@ -103,7 +111,7 @@ Game.prototype.animateShip = function(ship)
 		var dx = ship['Moves'][this.move]['X'] - ship['X'];
 		var dy = ship['Moves'][this.move]['Y'] - ship['Y'];
 		
-		this.g.fillStyle = "rgb(200,0,0)";
+		this.g.fillStyle = "rgb(255,0,0)";
 		this.g.beginPath();
 		this.g.arc(dx * (this.tick/ticksPerMove) * gridSize, dy * (this.tick/ticksPerMove) * gridSize, 2, 0, 2*Math.PI);
 		this.g.fill();
@@ -135,6 +143,12 @@ Game.prototype.drawShip = function(ship)
 	this.g.save();
 	
 	this.g.translate((ship['X'] + 0.5) * gridSize, (ship['Y'] + 0.5) * gridSize);
+
+	this.g.fillStyle = textBackground;
+	var info = this.g.measureText(ship['Name']);
+	this.g.fillRect(-12, -20, info.width+4, 12);
+
+	this.g.fillStyle = textColor;	
 	this.g.fillText(ship['Name'], -10, -10);
 	
 	this.g.rotate(this.direction[ship['D']]);
