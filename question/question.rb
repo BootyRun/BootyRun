@@ -1,5 +1,9 @@
 require 'mysql'
 require 'optparse'
+require 'json'
+# json examples
+# incoming => {"id":8}
+# outgoing => {"q":"questiontext","answers":[{"id":33,"answer":"answertext1"},{"id":34,"answer":"answertext2"}]}
 
 option = {}
 mysqlaccess = "192.168.1.4", "booty", "booty", "brquestions"
