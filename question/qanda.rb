@@ -13,37 +13,42 @@ def get_question(id, conn)
 end
 
 def get_answers(id, conn)
-  answers = {"text" => [],"correctness" => []}
-  result = conn.query("select answertext,correct from answer where questionid='#{id}';")
+  answers = {"text" => []}
+  result = conn.query("select answertext from answer where questionid='#{id}';")
   result.each_hash do |h|
-     answers["text"] << h['answertext']
-     answers["correctness"] << h['correct']
+    answers["text"] << h['answertext']
   end
   return answers
 end
 
 request = CGI.new()
 
-#json = {"id" => "1"}
-json = JSON.parse(request.params["json"])
+json = {"qid" => [{"id" => 1},{"id"=>2}]}
+#json = JSON.parse(request.params["json"])
 
 # json examples
-# incoming => {"id":8}
+# incoming => {"qid":[{"id":8},{"id":32}]}
 # outgoing => {"q":"questiontext","answers":[{"id":33,"answer":"answertext1"},{"id":34,"answer":"answertext2"}]}
 
 mysqlaccess = "192.168.1.4", "booty", "booty", "brquestions"
 connection = Mysql.new(*mysqlaccess)
-
-question = get_question(json["id"],connection)
+size = json["qid"].size
+questions = Array.new(size)
+answers = Array.new(size)
+counter = 0
+json["qid"].each do |id|
+  questions[counter] = get_question(id["id"],connection)
+  answers[counter] = get_answers(id["id"],connection)
+  counter = counter + 1
+end
 # ["Question A", "Question B", "Question C", "Question D"]
 
 mysqlaccess1 = "192.168.1.4", "booty", "booty", "brquestions"
-answers = get_answers(json["id"],connection)
 #[["Answer W","Answer X","Answer Y","Answer Z"],
 #["Answer W","Answer X","Answer Y","Answer Z"],
 #["Answer W","Answer X","Answer Y","Answer Z"],
 #["Answer W","Answer X","Answer Y","Answer Z"]]
 
-page = T_qanda.new([question["text"]],[answers["text"]])
+page = T_qanda.new(questions,answers)
 
 page.get_page

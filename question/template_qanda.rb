@@ -3,7 +3,9 @@ require './html_util'
 class T_qanda
 
   public
-  def initialize (questions, answers)
+  #questions => [{"text" => string,...]
+  #answers => [[{"text" => string,...],...]
+  def initialize(questions, answers)
     @questions = questions
     @answers = answers
     @html = HTML.new("Questions")
@@ -31,7 +33,7 @@ class T_qanda
     @html << '  <div id="form">'
     @html << '    <form action="PAULS_CODE.rb" method="post">'
     (0..@questions.length-1).each do |count|
-      @html << questionbox(@questions[count], @answers[count], ("questionid" + (count + 1).to_s))
+      questionbox(@questions[count], @answers[count], count + 1)
     end
     @html << '      <div class="button">'
     @html << '        <input type="submit" value="Submit Answers">'
@@ -50,25 +52,29 @@ class T_qanda
     return "\n"
   end
   
+  #question => string
+  #answers => [string,...]
+  #id => string
   def questionbox(question,answers,id)
-    q = '    <div class="qbox">' + nl
-    q << '      <fieldset>' + nl
-    q << '        <legend> <strong>Question ' + id.to_str + ':</strong> </legend>' + nl
-    q << '        <p class="question">' + question + '</p>' + nl
-    (0..(answers.length-1)).each do |count|
-      question = '        <input type="radio" name="'
-      question << id
+    @html << '      <div class="qbox">' + nl
+    @html << '        <fieldset>' + nl
+    @html << '          <legend> <strong>Question ' + id.to_s + ':</strong> </legend>' + nl
+    @html << '          <p class="question">' + question["text"] + '</p>' + nl
+    answer_count = 1
+    (answers["text"]).each do |answer|
+      question = '        <input type="radio" name="questionid'
+      question << id.to_s
       question << '" value="answerval'
-      question << (count + 1).to_s
+      question << answer_count.to_s
       question << '" /> <span class="answer">'
-      question << answers[count]
+      question << answer
       question << '</span> <br />'
       question << nl
       
-      q << question
+      @html << question
+      answer_count = answer_count + 1
     end
-    q << '      </fieldset>' + nl
-    q << '    </div>' + nl
-    return q
+    @html << '        </fieldset>' + nl
+    @html << '      </div>' + nl
   end
 end
